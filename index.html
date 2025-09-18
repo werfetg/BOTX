@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hacking Binary Signal Board</title>
+<title>Mobile Hacking Signal Board</title>
 <style>
 /* -------------------- Body & Container -------------------- */
 body {
@@ -13,19 +13,20 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     color: #00ff00;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .container {
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-radius: 20px;
-    padding: 35px;
+    padding: 25px 20px;
     box-shadow: 0 0 30px rgba(0,255,0,0.5), 0 0 60px rgba(0,255,0,0.2);
-    width: 450px;
+    width: 90%;
+    max-width: 450px;
     text-align: center;
     position: relative;
 }
@@ -33,7 +34,7 @@ body {
 /* -------------------- Titles & Buttons -------------------- */
 h1 {
     margin-bottom: 20px;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     letter-spacing: 2px;
     color: #00ff00;
     text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
@@ -43,32 +44,33 @@ input[type="file"] { display: none; }
 
 label.upload-btn {
     display: inline-block;
-    padding: 12px 25px;
-    background: rgba(0,255,0,0.1);
+    padding: 10px 20px;
+    background: rgba(0,255,0,0.12);
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 20px;
     transition: 0.3s;
     font-weight: bold;
     color: #00ff00;
-    text-shadow: 0 0 3px #00ff00;
+    text-shadow: 0 0 2px #00ff00;
+    font-size: 0.95rem;
 }
 label.upload-btn:hover {
     background: rgba(0,255,0,0.3);
 }
 
 button.generate-btn {
-    padding: 12px 28px;
+    padding: 10px 25px;
     border: none;
     border-radius: 15px;
-    background: rgba(0,255,0,0.1);
+    background: rgba(0,255,0,0.12);
     color: #00ff00;
     font-size: 1rem;
     cursor: pointer;
     transition: 0.3s;
-    margin-top: 15px;
+    margin-top: 10px;
     font-weight: bold;
-    text-shadow: 0 0 3px #00ff00;
+    text-shadow: 0 0 2px #00ff00;
 }
 button.generate-btn:hover {
     background: rgba(0,255,0,0.3);
@@ -77,11 +79,12 @@ button.generate-btn:hover {
 /* -------------------- Preview & Scanner -------------------- */
 #preview-container {
     position: relative;
-    margin-top: 20px;
+    margin-top: 15px;
+    width: 100%;
 }
 
 #preview {
-    max-width: 100%;
+    width: 100%;
     border-radius: 10px;
     border: 2px solid rgba(0,255,0,0.3);
     display: none;
@@ -102,14 +105,14 @@ button.generate-btn:hover {
 
 /* -------------------- Signal Box -------------------- */
 #signal {
-    margin-top: 25px;
-    font-size: 2rem;
+    margin-top: 20px;
+    font-size: 1.8rem;
     font-weight: bold;
-    padding: 18px;
-    border-radius: 15px;
+    padding: 15px;
+    border-radius: 12px;
     background: rgba(0,0,0,0.25);
     box-shadow: 0 0 15px rgba(0,255,0,0.5);
-    min-height: 60px;
+    min-height: 55px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -119,8 +122,8 @@ button.generate-btn:hover {
 /* -------------------- Icon Styles -------------------- */
 .signal-icon {
     font-weight: bold;
-    font-size: 1.6rem;
-    margin-left: 12px;
+    font-size: 1.4rem;
+    margin-left: 10px;
     display: inline-block;
 }
 
@@ -130,6 +133,13 @@ button.generate-btn:hover {
 
 .signal-sell::before {
     content: "📉";
+}
+
+/* -------------------- Responsive -------------------- */
+@media(max-width: 480px){
+    h1 { font-size: 1.4rem; }
+    label.upload-btn, button.generate-btn { font-size: 0.9rem; padding: 8px 18px; }
+    #signal { font-size: 1.5rem; padding: 12px; min-height: 50px; }
 }
 </style>
 </head>
@@ -173,7 +183,7 @@ screenshotInput.addEventListener('change', function(e) {
 });
 
 // -------------------- Scan Function --------------------
-function startScan(repeats = 3, speed = 1200) { // স্লো এবং হ্যাকিং ফিল
+function startScan(repeats = 3, speed = 1200) {
     scanner.style.display = 'block';
     signalDiv.textContent = "Scanning...";
     signalDiv.style.color = "#00ff00";
