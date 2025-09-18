@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hacking Binary Signal Board</title>
+<style>
+/* -------------------- Body & Container -------------------- */
+body {
+    margin: 0;
+    font-family: 'OCR A Std', monospace;
+    background: radial-gradient(circle at center, #0b0c0f 0%, #030406 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #00ff00;
+    overflow: hidden;
+}
+
+.container {
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 0 30px rgba(0,255,0,0.5), 0 0 60px rgba(0,255,0,0.2);
+    width: 450px;
+    text-align: center;
+    position: relative;
+}
+
+/* -------------------- Titles & Buttons -------------------- */
+h1 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+}
+
+input[type="file"] { display: none; }
+
+label.upload-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background: rgba(0,255,0,0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: 0.3s;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 3px #00ff00;
+}
+label.upload-btn:hover {
+    background: rgba(0,255,0,0.3);
+}
+
+button.generate-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 15px;
+    background: rgba(0,255,0,0.1);
+    color: #00ff00;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 15px;
+    font-weight: bold;
+    text-shadow: 0 0 3px #00ff00;
+}
+button.generate-btn:hover {
+    background: rgba(0,255,0,0.3);
+}
+
+/* -------------------- Preview & Scanner -------------------- */
+#preview-container {
+    position: relative;
+    margin-top: 20px;
+}
+
+#preview {
+    max-width: 100%;
+    border-radius: 10px;
+    border: 2px solid rgba(0,255,0,0.3);
+    display: none;
+}
+
+/* Scanner line with hacking glow */
+.scanner-line {
+    position: absolute;
+    height: 4px;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(0,255,0,0) 0%, rgba(0,255,0,0.9) 50%, rgba(0,255,0,0) 100%);
+    box-shadow: 0 0 20px rgba(0,255,0,0.7);
+    top: 0;
+    left: 0;
+    display: none;
+    border-radius: 2px;
+}
+
+/* -------------------- Signal Box -------------------- */
+#signal {
+    margin-top: 25px;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 18px;
+    border-radius: 15px;
+    background: rgba(0,0,0,0.25);
+    box-shadow: 0 0 15px rgba(0,255,0,0.5);
+    min-height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
+/* -------------------- Icon Styles -------------------- */
+.signal-icon {
+    font-weight: bold;
+    font-size: 1.6rem;
+    margin-left: 12px;
+    display: inline-block;
+}
+
+.signal-buy::before {
+    content: "📈";
+}
+
+.signal-sell::before {
+    content: "📉";
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>HACKING SIGNAL BOARD</h1>
+    
+    <label class="upload-btn" for="screenshot">Upload Screenshot</label>
+    <input type="file" id="screenshot" accept="image/*">
+    
+    <div id="preview-container">
+        <img id="preview" src="" alt="">
+        <div class="scanner-line" id="scanner"></div>
+    </div>
+
+    <button class="generate-btn" id="generate">Scan</button>
+    <div id="signal">Waiting for upload...</div>
+</div>
+
+<script>
+const screenshotInput = document.getElementById('screenshot');
+const preview = document.getElementById('preview');
+const scanner = document.getElementById('scanner');
+const signalDiv = document.getElementById('signal');
+const generateBtn = document.getElementById('generate');
+
+// -------------------- Show Screenshot Preview --------------------
+screenshotInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            signalDiv.textContent = "Screenshot uploaded. Ready to scan.";
+            signalDiv.style.color = "#00ff00";
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// -------------------- Scan Function --------------------
+function startScan(repeats = 3, speed = 1200) { // স্লো এবং হ্যাকিং ফিল
+    scanner.style.display = 'block';
+    signalDiv.textContent = "Scanning...";
+    signalDiv.style.color = "#00ff00";
+
+    let count = 0;
+
+    function scanAnimation() {
+        let pos = 0;
+        const height = preview.clientHeight;
+        const step = 3;
+        const interval = setInterval(() => {
+            pos += step;
+            if(pos > height) {
+                clearInterval(interval);
+                count++;
+                if(count < repeats) {
+                    scanAnimation();
+                } else {
+                    scanner.style.display = 'none';
+                    // Randomly choose BUY or SELL
+                    const signals = [
+                        {text: "BUY", color: "#00ff00", iconClass: "signal-buy"},
+                        {text: "SELL", color: "#ff4d4d", iconClass: "signal-sell"}
+                    ];
+                    const randomSignal = signals[Math.floor(Math.random() * signals.length)];
+
+                    signalDiv.innerHTML = `${randomSignal.text} <span class="signal-icon ${randomSignal.iconClass}"></span>`;
+                    signalDiv.style.color = randomSignal.color;
+                }
+            } else {
+                scanner.style.top = pos + 'px';
+            }
+        }, speed / (height / step));
+    }
+
+    scanAnimation();
+}
+
+// -------------------- Scan Button Click --------------------
+generateBtn.addEventListener('click', function() {
+    if(!preview.src) {
+        alert("Please upload a screenshot first!");
+        return;
+    }
+    startScan(3, 1200);
+});
+</script>
+
+</body>
+</html>
